@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BlackJack.model
 {
-    class Dealer : Player
+    class Dealer : Player, IVisitable
     {
         private Deck m_deck = null;
         private const int g_maxScore = 21;
@@ -18,13 +18,18 @@ namespace BlackJack.model
         private List<IBlackJackObserver> m_observers;
 
 
-        public Dealer(rules.RulesFactory a_rulesFactory)
+        public Dealer(rules.IRulesAbstractFactory a_rulesFactory)
         {
             m_newGameRule = a_rulesFactory.GetNewGameRule();
             m_hitRule = a_rulesFactory.GetHitRule();
             m_winRule = a_rulesFactory.GetWinRule();
             m_dealCardRule = a_rulesFactory.GetCardRule();
             m_observers = new List<IBlackJackObserver>();
+        }
+
+        public void Accept(IVisitor a_visitor)
+        {
+            a_visitor.VisitDealer(this);
         }
 
         public void AddSubscriber(IBlackJackObserver a_sub)

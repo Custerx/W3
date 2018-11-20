@@ -17,6 +17,7 @@ namespace BlackJack.controller
             m_view = a_view;
             m_game.AddSubscriber(this);
             m_view.DisplayWelcomeMessage();
+            Console.WriteLine(m_game.CurrentGameMode());
         }
 
         public bool Play()
