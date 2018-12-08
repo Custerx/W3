@@ -1,57 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Data;
 using System.Linq;
 using System.Text;
 
 namespace BlackJack.model
 {
-    class Game : IBlackJackObserver, IVisitable
+    class Game : IBlackJackObserver
     {
         private model.Dealer m_dealer;
         private model.Player m_player;
         private List<IBlackJackObserver> m_observers;
-        private rules.GameModeAbstractFactory m_gameMode;
-        private List<rules.IRulesAbstractFactory> m_listOfRules;
-        private rules.IRulesAbstractFactory m_currentGameMode;
 
         public Game()
         {
-            try
-            {
-                m_gameMode = new rules.GameModeAbstractFactory();
-                CreateGameModeList();
-                ChoseGameMode();
-
-                m_dealer = new Dealer(CurrentGameMode());
-                m_player = new Player();
-                m_observers = new List<IBlackJackObserver>();
-                m_dealer.AddSubscriber(this);
-            }
-            catch (System.ArgumentException ex)
-            {
-                Console.WriteLine(ex);
-            }
-        }
-
-        public rules.IRulesAbstractFactory CurrentGameMode()
-        {
-            return m_currentGameMode;
-        }
-
-        public void ChoseGameMode(int a_chosenGameMode = 0) // Default: InternationalSoft17Easy().
-        {
-            if (a_chosenGameMode > 2)
-            {
-                throw new System.ArgumentException("ChoseGameMode parameter cannot be larger than 2");
-            }
-            m_currentGameMode = m_listOfRules[a_chosenGameMode];
-        }
-
-        public void Accept(IVisitor a_visitor)
-        {
-            a_visitor.VisitGame(this);
+            m_dealer = new Dealer(new rules.RulesFactory());
+            m_player = new Player();
+            m_observers = new List<IBlackJackObserver>();
+            m_dealer.AddSubscriber(this);
         }
 
         public void AddSubscriber(IBlackJackObserver a_sub)
@@ -137,15 +103,6 @@ namespace BlackJack.model
         public int GetPlayerScore()
         {
             return m_player.CalcScore();
-        }
-
-        private void CreateGameModeList()
-        {
-            m_listOfRules = new List<rules.IRulesAbstractFactory>();
-
-            m_listOfRules.Add(m_gameMode.InternationalSoft17Easy());
-            m_listOfRules.Add(m_gameMode.AmericanSoft17Easy());
-            m_listOfRules.Add(m_gameMode.AmericanBasicBasic());
         }
     }
 }

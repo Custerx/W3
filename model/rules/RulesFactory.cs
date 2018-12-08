@@ -5,21 +5,21 @@ using System.Text;
 
 namespace BlackJack.model.rules
 {
-    class RulesFactoryInternationalSoft17Easy : IRulesAbstractFactory
+    class RulesFactory
     {
         public IHitStrategy GetHitRule()
         {
-            return new Soft17HitStrategy();
+            return new BasicHitStrategy();
         }
 
         public INewGameStrategy GetNewGameRule()
         {
-            return new InternationalNewGameStrategy();
+            return new AmericanNewGameStrategy();
         }
 
         public IWinStrategy GetWinRule()
         {
-            return new EasyWinStrategy();
+            return new BasicWinStrategy();
         }
 
         public IDealCardStrategy GetCardRule()
