@@ -5,9 +5,30 @@ using System.Text;
 
 namespace BlackJack.model
 {
-    class Player
+    class Player : ISubject
     {
         private List<Card> m_hand = new List<Card>();
+        private List<IBlackJackObserver> m_observers;
+
+        public Player()
+        {
+            m_observers = new List<IBlackJackObserver>();
+        }
+
+        public void AddSubscriber(IBlackJackObserver a_sub)
+        {
+            m_observers.Add(a_sub);
+        }
+
+        public void RemoveSubscriber(IBlackJackObserver a_observer)
+        {
+            m_observers.Remove(a_observer);
+        }
+
+        public void NotifySubscriber()
+        {
+            m_observers.ForEach(x => x.CardDealt());
+        }
 
         public void DealCard(Card a_card)
         {

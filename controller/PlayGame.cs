@@ -15,7 +15,8 @@ namespace BlackJack.controller
         {
             m_game = a_game;
             m_view = a_view;
-            m_game.AddSubscriber(this);
+            m_game.AddPlayerSubscriber(this);
+            m_game.AddDealerSubscriber(this);
             m_view.DisplayWelcomeMessage();
         }
 
@@ -29,32 +30,12 @@ namespace BlackJack.controller
             m_view.DisplayWelcomeMessage();
             m_view.DisplayDealerHand(m_game.GetDealerHand(), m_game.GetDealerScore());
             m_view.DisplayPlayerHand(m_game.GetPlayerHand(), m_game.GetPlayerScore());
-            System.Threading.Thread.Sleep(1000);
-        }
-
-        public void PlayerCardDealt()
-        {
-            m_view.DisplayWelcomeMessage();
-            m_view.DisplayDealerHand(m_game.GetDealerHand(), m_game.GetDealerScore(), false); // Cards presented without delay.
-            m_view.DisplayPlayerHand(m_game.GetPlayerHand(), m_game.GetPlayerScore());
 
             if (m_game.IsGameOver())
             {
                 m_view.DisplayGameOver(m_game.IsDealerWinner());
             }
-            System.Threading.Thread.Sleep(1000);
-        }
 
-        public void DealerCardDealt()
-        {
-            m_view.DisplayWelcomeMessage();
-            m_view.DisplayDealerHand(m_game.GetDealerHand(), m_game.GetDealerScore());
-            m_view.DisplayPlayerHand(m_game.GetPlayerHand(), m_game.GetPlayerScore(), false); // Cards presented without delay.
-
-            if (m_game.IsGameOver())
-            {
-                m_view.DisplayGameOver(m_game.IsDealerWinner());
-            }
             System.Threading.Thread.Sleep(1000);
         }
     }

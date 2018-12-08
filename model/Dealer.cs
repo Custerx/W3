@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BlackJack.model
 {
-    class Dealer : Player
+    class Dealer : Player, ISubject
     {
         private Deck m_deck = null;
         private const int g_maxScore = 21;
@@ -15,41 +15,12 @@ namespace BlackJack.model
         private rules.IWinStrategy m_winRule;
         private rules.IDealCardStrategy m_dealCardRule;
 
-        private List<IBlackJackObserver> m_observers;
-
-
         public Dealer(rules.RulesFactory a_rulesFactory)
         {
             m_newGameRule = a_rulesFactory.GetNewGameRule();
             m_hitRule = a_rulesFactory.GetHitRule();
             m_winRule = a_rulesFactory.GetWinRule();
             m_dealCardRule = a_rulesFactory.GetCardRule();
-            m_observers = new List<IBlackJackObserver>();
-        }
-
-        public void AddSubscriber(IBlackJackObserver a_sub)
-        {
-            m_observers.Add(a_sub);
-        }
-
-        public void RemoveSubscriber(IBlackJackObserver a_sub)
-        {
-            m_observers.Remove(a_sub);
-        }
-
-        public void NotifySubscriber()
-        {
-            m_observers.ForEach(x => x.CardDealt());
-        }
-
-        public void NotifyTwoSubscriber()
-        {
-            m_observers.ForEach(x => x.PlayerCardDealt());
-        }
-
-        public void NotifyThreeSubscriber()
-        {
-            m_observers.ForEach(x => x.DealerCardDealt());
         }
 
         public bool NewGame(Player a_player)
@@ -69,7 +40,7 @@ namespace BlackJack.model
             if (m_deck != null && a_player.CalcScore() < g_maxScore && !IsGameOver())
             {
                 m_dealCardRule.DealCard(m_deck, this, a_player);
-                NotifyTwoSubscriber();
+                NotifySubscriber();
                 return true;
             }
             return false;
@@ -82,7 +53,7 @@ namespace BlackJack.model
                 while (m_hitRule.DoHit(this))
                 {
                     m_dealCardRule.DealCard(m_deck, this, this);
-                    NotifyThreeSubscriber();
+                    NotifySubscriber();
                 }
                 return true;
             }
